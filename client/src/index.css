@@ -1,1 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 @import "tailwindcss";
+@theme {
+  --color-primary: #3e5879;
+  --color-secondary: #d8c4b6;
+  --color-background-color: #f5efe7;
+  --color-color-bold: #213555;
+  --font-custom: Playfair Display, Poppins, sans-serif;
+}
