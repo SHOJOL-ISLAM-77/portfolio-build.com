@@ -1,29 +1,29 @@
 import bcrypt from "bcryptjs";
 import type { NextFunction, Request, Response } from "express";
+import Users from "../models/user.model";
 import { loginUser, registerUser } from "../services/auth.service";
 import catchAsync from "../utils/catchAsync";
-import Users from "../models/user.model";
 
 export const loginController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { email, userName, password } = req.body;
-  const user = await Users.findOne({ email, userName });
+  const DBuser = await Users.findOne({ email, userName });
 
-  if (!user) {
+  if (!DBuser) {
     next({
       message: "User not found",
       statusCode: 404,
     });
   } else {
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, DBuser.password);
+
     if (!isPasswordValid) {
       next({
         message: "Invalid password",
         statusCode: 401,
       });
     } else {
-      const result = await loginUser(user);
+      const { user, token } = await loginUser(DBuser);
 
-      const token = result.token;
       res.cookie("access_token", token.accessToken, {
         httpOnly: true,
         secure: true,
@@ -34,7 +34,7 @@ export const loginController = catchAsync(async (req: Request, res: Response, ne
       });
       res.status(200).json({
         status: "success",
-        data: result,
+        user,
       });
     }
   }

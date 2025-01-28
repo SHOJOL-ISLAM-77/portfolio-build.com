@@ -11,4 +11,5 @@ export interface IUser extends Document {
   role: "holder";
   createdAt: Date;
   personalUrl: string;
+  refreshToken?: string;
 }

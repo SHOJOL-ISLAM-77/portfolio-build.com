@@ -11,6 +11,7 @@ const UsersSchema: Schema = new Schema({
   role: { type: String, enum: ["holder"], default: "holder", required: true },
   createdAt: { type: Date, default: Date.now },
   personalUrl: { type: String },
+  refreshToken: { type: String },
 });
 
 const Users = mongoose.model<IUser>("Users", UsersSchema);

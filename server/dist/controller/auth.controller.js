@@ -14,20 +14,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerController = exports.loginController = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const user_model_1 = __importDefault(require("../models/user.model"));
 const auth_service_1 = require("../services/auth.service");
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
-const user_model_1 = __importDefault(require("../models/user.model"));
 exports.loginController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, userName, password } = req.body;
-    const user = yield user_model_1.default.findOne({ email, userName });
-    if (!user) {
+    const DBuser = yield user_model_1.default.findOne({ email, userName });
+    if (!DBuser) {
         next({
             message: "User not found",
             statusCode: 404,
         });
     }
     else {
-        const isPasswordValid = yield bcryptjs_1.default.compare(password, user.password);
+        const isPasswordValid = yield bcryptjs_1.default.compare(password, DBuser.password);
         if (!isPasswordValid) {
             next({
                 message: "Invalid password",
@@ -35,8 +35,7 @@ exports.loginController = (0, catchAsync_1.default)((req, res, next) => __awaite
             });
         }
         else {
-            const result = yield (0, auth_service_1.loginUser)(user);
-            const token = result.token;
+            const { user, token } = yield (0, auth_service_1.loginUser)(DBuser);
             res.cookie("access_token", token.accessToken, {
                 httpOnly: true,
                 secure: true,
@@ -47,7 +46,7 @@ exports.loginController = (0, catchAsync_1.default)((req, res, next) => __awaite
             });
             res.status(200).json({
                 status: "success",
-                data: result,
+                user,
             });
         }
     }

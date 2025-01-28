@@ -6,16 +6,22 @@ import Users from "../models/user.model";
 import { createAccessToken, createRefreshToken } from "../utils/JWTUtils";
 
 export const loginUser = async (user: IUser) => {
-  const accessToken = createAccessToken(user);
-  const refreshToken = createRefreshToken(user);
+  const accessToken = await createAccessToken(user);
+  const refreshToken = await createRefreshToken(user);
 
   await Users.findByIdAndUpdate(user._id, { refreshToken });
+  const resUser = {
+    _id: user._id,
+    name: user.fullName,
+    userName: user.userName,
+    email: user.email,
+    profileUrl: user.profileUrl,
+    portfolioId: user.portfolioId,
+    role: user.role,
+    personalUrl: user.personalUrl,
+  };
   return {
-    user: {
-      name: user.fullName,
-      email: user.email,
-      profileUrl: user.profileUrl,
-    },
+    user: resUser,
     token: { accessToken, refreshToken },
   };
 };
@@ -26,8 +32,8 @@ export const registerUser = async (userData: IUser) => {
   if (!result) {
     throw new Error("Failed to create user");
   }
-  const accessToken = createAccessToken(result);
-  const refreshToken = createRefreshToken(result);
+  const accessToken = await createAccessToken(result);
+  const refreshToken = await createRefreshToken(result);
   await Users.findByIdAndUpdate(result._id, { refreshToken });
 
   const user = {

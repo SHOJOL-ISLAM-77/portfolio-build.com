@@ -18,15 +18,21 @@ const config_1 = __importDefault(require("../config"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const JWTUtils_1 = require("../utils/JWTUtils");
 const loginUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    const accessToken = (0, JWTUtils_1.createAccessToken)(user);
-    const refreshToken = (0, JWTUtils_1.createRefreshToken)(user);
+    const accessToken = yield (0, JWTUtils_1.createAccessToken)(user);
+    const refreshToken = yield (0, JWTUtils_1.createRefreshToken)(user);
     yield user_model_1.default.findByIdAndUpdate(user._id, { refreshToken });
+    const resUser = {
+        _id: user._id,
+        name: user.fullName,
+        userName: user.userName,
+        email: user.email,
+        profileUrl: user.profileUrl,
+        portfolioId: user.portfolioId,
+        role: user.role,
+        personalUrl: user.personalUrl,
+    };
     return {
-        user: {
-            name: user.fullName,
-            email: user.email,
-            profileUrl: user.profileUrl,
-        },
+        user: resUser,
         token: { accessToken, refreshToken },
     };
 });
@@ -36,8 +42,8 @@ const registerUser = (userData) => __awaiter(void 0, void 0, void 0, function* (
     if (!result) {
         throw new Error("Failed to create user");
     }
-    const accessToken = (0, JWTUtils_1.createAccessToken)(result);
-    const refreshToken = (0, JWTUtils_1.createRefreshToken)(result);
+    const accessToken = yield (0, JWTUtils_1.createAccessToken)(result);
+    const refreshToken = yield (0, JWTUtils_1.createRefreshToken)(result);
     yield user_model_1.default.findByIdAndUpdate(result._id, { refreshToken });
     const user = {
         _id: result._id,
