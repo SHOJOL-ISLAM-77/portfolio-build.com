@@ -1,15 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NavLinks from "./NavLinks";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
+  const [style, setStyle] = useState();
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 0) {
+        setStyle("shadow-lg bg-secondary");
+      }
+      if (window.scrollY > 150) {
+        setStyle(`${style} bg-secondary opacity-95`);
+      }
+      if (window.scrollY === 0) {
+        setStyle("");
+      }
+    });
+  }, []);
   return (
-    <nav className="bg-primary text-background-color">
-      <div className="container px-4 mx-auto flex items-start justify-between py-4">
+    <nav className={`bg-primary text-text-color sticky top-0 z-50 transition-all ${style}`}>
+      <div className="container flex items-start justify-between py-4">
         <Link to={"/"}>
           <img
-            className="size-10 sm:size-15 rounded-full"
+            className="size-10 sm:size-15 rounded-full hover:scale-125 transition-all"
             src="https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg"
             alt="Logo"
           />

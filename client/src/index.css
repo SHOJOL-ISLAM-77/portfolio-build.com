@@ -1,9 +1,31 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 @import "tailwindcss";
 @theme {
-  --color-primary: #3e5879;
-  --color-secondary: #d8c4b6;
-  --color-background-color: #f5efe7;
-  --color-color-bold: #213555;
+  --color-primary: #101828;
+  --color-secondary: #364153;
+  --color-text-color: #f5efe7;
+  --color-gray: #1e2939;
   --font-custom: Playfair Display, Poppins, sans-serif;
+}
+@utility container {
+  margin: 0 auto;
+  padding: 0 1rem;
+  @media screen and (min-width: 640px) {
+    padding: 0 2rem;
+  }
+  @media screen and (min-width: 1024px) {
+    padding: 0 4rem;
+  }
+}
+@utility section {
+  padding-top: 2rem;
+}
+
+@utility scrollbar {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
