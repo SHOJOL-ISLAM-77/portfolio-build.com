@@ -8,14 +8,14 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse md:flex-row justify-between items-center gap-8 sm:gap-12 lg:gap-16">
         {/* Text Content */}
         <div className="flex-2 space-y-4 sm:space-y-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl text-center md:text-left">
+          <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl text-center md:text-left">
             Let’s create a suitable portfolio with us! that makes you stand out.
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-center md:text-left">
-            Setting up your own portfolio website is a fantastic way to express who you are as a creative, and to share
-            your talents with the world. Let’s take a look at how to create a free portfolio and everything that you
-            should include in it.
-            {/* We provide you some template and a domain <br className="hidden sm:block" /> for create your portfolio. */}
+            Setting up your own portfolio website is a fantastic way to express
+            who you are as a creative, and to share your talents with the world.
+            Let’s take a look at how to create a free portfolio and everything
+            that you should include in it.
           </p>
           <div className="flex justify-center md:justify-start">
             <Button

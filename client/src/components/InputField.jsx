@@ -13,7 +13,7 @@ const InputField = ({ label, value, setValue, placeholder, type: t = "text", fie
           placeholder={placeholder}
           value={value}
           onChange={type == "file" ? setValue : (e) => setValue(e.target.value)}
-          className="w-full p-4 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+          className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none text-lg"
           required
         />
         {field === "password" && (
