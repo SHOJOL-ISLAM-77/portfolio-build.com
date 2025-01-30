@@ -20,7 +20,7 @@ const Navbar = () => {
     });
   }, []);
   return (
-    <nav className={`bg-primary text-text-color sticky top-0 z-50 transition-all ${style}`}>
+    <nav className={`bg-primary text-text-color sticky top-0 z-50 border-b border-white transition-all ${style}`}>
       <div className="container flex items-start justify-between py-4">
         <Link to={"/"}>
           <img
@@ -86,7 +86,15 @@ const links = [
     link: "blogs",
   },
   {
+    title: "contact",
+    link: "contact",
+  },
+  {
     title: "Your Portfolio",
     link: "portfolio",
+  },
+  {
+    title: "Login",
+    link: "login",
   },
 ];

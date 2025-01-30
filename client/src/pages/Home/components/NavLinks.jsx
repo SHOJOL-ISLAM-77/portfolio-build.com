@@ -8,7 +8,7 @@ const NavLinks = ({ title, link }) => {
         isPending
           ? "pending"
           : isActive
-          ? "-translate-y-2 text-2xl"
+          ? "-translate-y-2 text-2xl animate-bounce"
           : "hover:-translate-y-3 font-semibold hover:text-2xl transition-all p-2"
       }
       to={`/${link}`}>
