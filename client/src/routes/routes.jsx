@@ -1,12 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../MainLayout/MainLayout";
 import Error404 from "../pages/404/404";
+import Blogs from "../pages/Blogs/Blogs";
 import Contact from "../pages/Contact/Contact";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
 import Portfolio1 from "../pages/Portfolios/Portfolio1";
 import Registration from "../pages/Registration/Registration";
-import Blogs from "../pages/Blogs/Blogs";
+import PrivateRoute from "./PrivateRoutes";
 
 const router = createBrowserRouter([
   {
@@ -19,13 +20,21 @@ const router = createBrowserRouter([
       },
       {
         path: "/portfolio",
-        element: <Portfolio1 />,
+        element: (
+          <PrivateRoute>
+            <Portfolio1 />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/contact",
-        element: <Contact />,
+        element: (
+          <PrivateRoute>
+            <Contact />
+          </PrivateRoute>
+        ),
       },
-      {path:"blogs", element: <Blogs/>},
+      { path: "blogs", element: <Blogs /> },
     ],
   },
   { path: "/login", element: <Login /> },

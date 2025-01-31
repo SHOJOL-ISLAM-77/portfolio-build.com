@@ -16,7 +16,7 @@ exports.createRefreshToken = exports.createAccessToken = exports.verifyToken = e
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const index_1 = __importDefault(require("../config/index"));
 const signToken = (payload) => {
-    return jsonwebtoken_1.default.sign(payload, index_1.default.access_token_secret, { expiresIn: "1h" });
+    return jsonwebtoken_1.default.sign(payload, index_1.default.access_token_secret, { expiresIn: "10s" });
 };
 exports.signToken = signToken;
 const verifyToken = (token) => {
@@ -32,8 +32,9 @@ exports.verifyToken = verifyToken;
 const createAccessToken = (result) => __awaiter(void 0, void 0, void 0, function* () {
     return yield (0, exports.signToken)({
         email: result.email,
-        name: result.userName,
+        userName: result.userName,
         fullName: result.userName,
+        profileUrl: result.profileUrl,
         id: result._id,
         portfolioId: result.portfolioId,
         role: result.role,
@@ -41,13 +42,19 @@ const createAccessToken = (result) => __awaiter(void 0, void 0, void 0, function
 });
 exports.createAccessToken = createAccessToken;
 const createRefreshToken = (result) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield (0, exports.signToken)({
-        email: result.email,
-        name: result.userName,
-        fullName: result.userName,
-        id: result._id,
-        portfolioId: result.portfolioId,
-        role: result.role,
-    });
+    try {
+        return yield jsonwebtoken_1.default.sign({
+            email: result.email,
+            userName: result.userName,
+            fullName: result.userName,
+            profileUrl: result.profileUrl,
+            id: result._id,
+            portfolioId: result.portfolioId,
+            role: result.role,
+        }, index_1.default.refresh_token_secret, { expiresIn: "7d" });
+    }
+    catch (_a) {
+        throw new Error("Failed to create refresh token");
+    }
 });
 exports.createRefreshToken = createRefreshToken;

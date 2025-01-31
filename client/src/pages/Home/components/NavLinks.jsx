@@ -1,8 +1,17 @@
 import React from "react";
+import { IoIosLogOut } from "react-icons/io";
 import { NavLink } from "react-router-dom";
 
 const NavLinks = ({ title, link }) => {
-  return (
+  const handleLogout = () => {};
+
+  return link === "logout" ? (
+    <button
+      onClick={handleLogout}
+      className="text-xl font-bold bg-blue-500 px-5 py-2 rounded-lg cursor-pointer flex justify-center items-center gap-2">
+      Logout <IoIosLogOut className="font-bold text-xl " />
+    </button>
+  ) : (
     <NavLink
       className={({ isActive, isPending }) =>
         isPending

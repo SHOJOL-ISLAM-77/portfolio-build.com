@@ -1,27 +1,34 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import InputField from "../../components/InputField";
+import Toast from "../../components/Toast";
+import { useLoginMutation } from "../../feature/auth/authApi";
+import { loginSuccess } from "../../feature/auth/authSlice";
 
 const Login = () => {
-  // State for form fields
   const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [login, { isLoading }] = useLoginMutation();
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Create login data object
     const loginData = {
       userName,
       email,
       password,
     };
 
-    // Display the login data (you can replace this with an API call)
-    console.log("Login Data:", loginData);
-    alert("Login successful! Check the console for login data.");
+    try {
+      const response = await login(loginData).unwrap();
+      loginSuccess(response.user);
+      Toast(true, "Login successful");
+      navigate("/");
+    } catch (error) {
+      Toast(false, error.data.message);
+    }
   };
 
   return (
@@ -40,7 +47,7 @@ const Login = () => {
             placeholder="Enter your password"
           />
 
-          <Button title="Login" className={"w-full bg-blue-400"} shadowColor="#136cf1" />
+          <Button disable={isLoading} title="Login" className={"w-full bg-blue-400"} shadowColor="#136cf1" />
         </form>
 
         <p className="text-center mt-8 text-lg">

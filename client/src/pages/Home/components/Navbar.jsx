@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import NavLinks from "./NavLinks";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
   const [style, setStyle] = useState();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -19,6 +21,39 @@ const Navbar = () => {
       }
     });
   }, []);
+
+  const links = [
+    {
+      title: "About Us",
+      link: "about",
+    },
+    {
+      title: "Blogs",
+      link: "blogs",
+    },
+    {
+      title: "contact",
+      link: "contact",
+    },
+    user?.portfolioId
+      ? {
+          title: "Your Portfolio",
+          link: "portfolio",
+        }
+      : {
+          title: "View Templates",
+          link: "templates",
+        },
+    !user
+      ? {
+          title: "Login",
+          link: "login",
+        }
+      : {
+          title: "Logout",
+          link: "logout",
+        },
+  ];
   return (
     <nav className={`bg-primary text-text-color sticky top-0 z-50 border-b border-white transition-all ${style}`}>
       <div className="container flex items-start justify-between py-4">
@@ -71,30 +106,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-const links = [
-  {
-    title: "View Templates",
-    link: "templates",
-  },
-  {
-    title: "About Us",
-    link: "about",
-  },
-  {
-    title: "Blogs",
-    link: "blogs",
-  },
-  {
-    title: "contact",
-    link: "contact",
-  },
-  {
-    title: "Your Portfolio",
-    link: "portfolio",
-  },
-  {
-    title: "Login",
-    link: "login",
-  },
-];

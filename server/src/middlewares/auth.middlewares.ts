@@ -3,16 +3,16 @@ import { verifyToken } from "../utils/JWTUtils";
 import type { AuthenticatedRequest } from "../utils/type";
 
 export const authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  const token = req.cookies?.access_token;
+
+  if (!token) {
     res.status(401).json({
       status: "error",
       errorCode: "UNAUTHORIZED",
-      message: "Authentication Token is Missing or Invalid",
+      message: "Authentication Token is Missing",
     });
     return;
   }
-  const token = authHeader.split(" ")[1];
 
   try {
     const user = verifyToken(token);
