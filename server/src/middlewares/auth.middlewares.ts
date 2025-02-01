@@ -2,27 +2,20 @@ import type { NextFunction, Response } from "express";
 import { verifyToken } from "../utils/JWTUtils";
 import type { AuthenticatedRequest } from "../utils/type";
 
-export const authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-  const token = req.cookies?.access_token;
+export const authenticate = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const result = await verifyToken(req, res);
 
-  if (!token) {
-    res.status(401).json({
-      status: "error",
-      errorCode: "UNAUTHORIZED",
-      message: "Authentication Token is Missing",
+  if (result.error) {
+    res.status(result.status).json({
+      success: false,
+      message: result.error || "Invalid or Expired Authentication Token",
     });
-    return;
-  }
-
-  try {
-    const user = verifyToken(token);
-    req.user = user;
+  } else {
+    req.user = result.user;
     next();
-  } catch {
-    res.status(401).json({
-      status: "error",
-      errorCode: "TOKEN_INVALID",
-      message: "Invalid or Expired Authentication Token",
-    });
   }
 };

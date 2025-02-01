@@ -5,105 +5,116 @@ import { loginUser, registerUser } from "../services/auth.service";
 import catchAsync from "../utils/catchAsync";
 import { verifyToken } from "../utils/JWTUtils";
 
-export const loginController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { email, userName, password } = req.body;
-  const DBuser = await Users.findOne({ email, userName });
+export const loginController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, userName, password } = req.body;
+    const DBuser = await Users.findOne({ email, userName });
 
-  if (!DBuser) {
-    next({
-      message: "User not found",
-      statusCode: 404,
-    });
-  } else {
-    const isPasswordValid = await bcrypt.compare(password, DBuser.password);
-
-    if (!isPasswordValid) {
+    if (!DBuser) {
       next({
-        message: "Invalid password",
-        statusCode: 401,
+        message: "User not found",
+        statusCode: 404,
       });
     } else {
-      const { user, token } = await loginUser(DBuser);
+      const isPasswordValid = await bcrypt.compare(password, DBuser.password);
 
-      res.cookie("access_token", token.accessToken, {
-        httpOnly: true,
-        secure: true,
-      });
-      res.cookie("refresh_token", token.refreshToken, {
-        httpOnly: true,
-        secure: true,
-      });
+      if (!isPasswordValid) {
+        next({
+          message: "Invalid password",
+          statusCode: 401,
+        });
+      } else {
+        const { user, token } = await loginUser(DBuser);
+
+        res.cookie("access_token", token.accessToken, {
+          httpOnly: true,
+          secure: true,
+        });
+        res.cookie("refresh_token", token.refreshToken, {
+          httpOnly: true,
+          secure: true,
+        });
+        res.status(200).json({
+          status: "success",
+          user,
+        });
+      }
+    }
+  }
+);
+
+export const registerController = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await registerUser(req.body);
+    const token = result.token;
+    res.cookie("access_token", token.accessToken, {
+      httpOnly: true,
+      secure: true,
+    });
+    res.cookie("refresh_token", token.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+    res.status(200).json({
+      success: true,
+      data: result.user,
+    });
+  }
+);
+
+export const logoutController = catchAsync(
+  async (req: Request, res: Response) => {
+    res.clearCookie("access_token");
+    res.clearCookie("refresh_token");
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  }
+);
+
+export const getAllUsersController = catchAsync(
+  async (req: Request, res: Response) => {
+    const users = await Users.find(
+      {},
+      { password: 0, __v: 0, refreshToken: 0, createdAt: 0 }
+    );
+    res.status(200).json({
+      success: true,
+      data: users,
+    });
+  }
+);
+
+export const checkUserNameController = catchAsync(
+  async (req: Request, res: Response) => {
+    const { userName } = req.body;
+    const user = await Users.findOne({ userName });
+    if (user) {
       res.status(200).json({
-        status: "success",
-        user,
+        success: true,
+        message: "Username Already Taken",
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "Username Available",
       });
     }
   }
-});
+);
 
-export const registerController = catchAsync(async (req: Request, res: Response) => {
-  const result = await registerUser(req.body);
-  const token = result.token;
-  res.cookie("access_token", token.accessToken, {
-    httpOnly: true,
-    secure: true,
-  });
-  res.cookie("refresh_token", token.refreshToken, {
-    httpOnly: true,
-    secure: true,
-  });
-  res.status(200).json({
-    success: true,
-    data: result.user,
-  });
-});
+export const checkAuthController = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await verifyToken(req, res);
 
-export const logoutController = catchAsync(async (req: Request, res: Response) => {
-  res.clearCookie("access_token");
-  res.clearCookie("refresh_token");
-  res.status(200).json({
-    success: true,
-    message: "Logged out successfully",
-  });
-});
-
-export const getAllUsersController = catchAsync(async (req: Request, res: Response) => {
-  const users = await Users.find({}, { password: 0, __v: 0, refreshToken: 0, createdAt: 0 });
-  res.status(200).json({
-    success: true,
-    data: users,
-  });
-});
-
-export const checkUserNameController = catchAsync(async (req: Request, res: Response) => {
-  const { userName } = req.body;
-  const user = await Users.findOne({ userName });
-  if (user) {
-    res.status(200).json({
-      success: true,
-      message: "Username Already Taken",
-    });
-  } else {
-    res.status(200).json({
-      success: true,
-      message: "Username Available",
-    });
+    if (result.user) {
+      res.status(200).json({
+        success: true,
+        user:result.user,
+      });
+    } else {
+      res.status(401).json({ message: "Invalid token" });
+    }
   }
-});
-
-export const checkAuthController = catchAsync(async (req: Request, res: Response) => {
-  const token = req.cookies.access_token;
-  if (!token) {
-    res.status(401).json({ message: "Not authenticated" });
-    return;
-  }
-  const user = verifyToken(token);
-  try {
-    res.status(200).json({
-      success: true,
-      user,
-    });
-  } catch {
-    res.status(401).json({ message: "Invalid token" });
-  }
-});
+);

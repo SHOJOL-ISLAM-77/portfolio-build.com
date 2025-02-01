@@ -100,19 +100,14 @@ exports.checkUserNameController = (0, catchAsync_1.default)((req, res) => __awai
     }
 }));
 exports.checkAuthController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.cookies.access_token;
-    if (!token) {
-        res.status(401).json({ message: "Not authenticated" });
-        return;
-    }
-    const user = (0, JWTUtils_1.verifyToken)(token);
-    try {
+    const result = yield (0, JWTUtils_1.verifyToken)(req, res);
+    if (result.user) {
         res.status(200).json({
             success: true,
-            user,
+            user: result.user,
         });
     }
-    catch (_a) {
+    else {
         res.status(401).json({ message: "Invalid token" });
     }
 }));
