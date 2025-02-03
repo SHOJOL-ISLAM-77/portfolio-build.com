@@ -4,9 +4,7 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white py-8 sm:py-12 border-t border-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Footer Content */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
-          {/* Column 1: About */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">About Us</h3>
             <p className="text-sm text-gray-400">
@@ -14,7 +12,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Column 2: Quick Links */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Quick Links</h3>
             <ul className="space-y-2">
@@ -41,7 +38,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 3: Social Media */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Follow Us</h3>
             <div className="flex space-x-4">
@@ -63,11 +59,10 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Column 4: Newsletter */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Newsletter</h3>
             <p className="text-sm text-gray-400">Subscribe to our newsletter for the latest updates and offers.</p>
-            <form className="flex flex-col sm:flex-row gap-2">
+            {/* <form className="flex flex-col sm:flex-row gap-2">
               <input
                 type="email"
                 placeholder="Your email"
@@ -78,11 +73,10 @@ const Footer = () => {
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
                 Subscribe
               </button>
-            </form>
+            </form> */}
           </div>
         </div>
 
-        {/* Copyright Notice */}
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
           &copy; {new Date().getFullYear()} Portfolio Builder. All rights reserved.
         </div>

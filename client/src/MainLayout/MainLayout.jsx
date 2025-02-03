@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { loginSuccess, setLoading } from "../feature/auth/authSlice";
-import Footer from "../pages/Home/components/Footer";
-import Navbar from "../pages/Home/components/Navbar";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const MainLayout = () => {
   const dispatch = useDispatch();
